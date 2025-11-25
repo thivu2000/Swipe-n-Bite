@@ -21,7 +21,4 @@ MainActivity : ComponentActivity() {
             }
         }
     }
-
-    fun newFunction() {
-    }
 }

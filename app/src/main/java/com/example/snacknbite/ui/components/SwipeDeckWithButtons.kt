@@ -1,104 +1,165 @@
 package com.example.snacknbite.ui.components
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.key
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.zIndex
 import com.example.snacknbite.data.model.FoodGenre
-import com.example.snacknbite.ui.screens.CompletionScreen
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 @Composable
 fun SwipeDeckWithButtons(
     foods: List<FoodGenre>,
     modifier: Modifier = Modifier
 ) {
-    var foodList by remember { mutableStateOf(foods) }
-    var likedFoods by remember { mutableStateOf(emptyList<FoodGenre>()) }
-    var dislikedFoods by remember { mutableStateOf(emptyList<FoodGenre>()) }
-    var lastRemoved by remember { mutableStateOf<FoodGenre?>(null) }
-    var lastAction by remember { mutableStateOf<String?>(null) }
+    var currentIndex by remember { mutableStateOf(0) }
+    var likedCount by remember { mutableStateOf(0) }
+    var dislikedCount by remember { mutableStateOf(0) }
 
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        val visible = foodList.take(3)
-        if (visible.isNotEmpty()) {
-            val rev = visible.reversed()
-            val size = rev.size
-            rev.forEachIndexed { index, food ->
-                val isTop = index == size - 1
-                key(food.slug) {
-                    if (isTop) {
-                        SwipeableFoodCard(
-                            food = food,
-                            isTop = true,
-                            onSwiped = { liked ->
-                                lastRemoved = food
-                                lastAction = if (liked) "Like" else "Dislike"
-                                if (liked) likedFoods = likedFoods + food else dislikedFoods =
-                                    dislikedFoods + food
-                                foodList = foodList.filterNot { it.slug == food.slug }
-                            }
-                        )
-                    } else {
-                        FoodCard(food = food, modifier = Modifier.padding(16.dp))
-                    }
-                }
-            }
-        } else {
-            CompletionScreen(
-                likedCount = likedFoods.size,
-                dislikedCount = dislikedFoods.size
-            ) {
-                foodList = foods
-                likedFoods = emptyList()
-                dislikedFoods = emptyList()
-                lastRemoved = null
-                lastAction = null
-            }
-        }
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(bottom = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+        // Zähler oben anzeigen
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            if (lastAction != null) {
-                Text(
-                    text = if (lastAction == "Like") "Gefällt mir!" else "Nicht mein Geschmack"
+            BasicText(
+                text = "Likes: $likedCount",
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif,
+                    color = Color.Green,
+                    fontWeight = FontWeight.Bold
                 )
-            }
+            )
+            BasicText(
+                text = "Dislikes: $dislikedCount",
+                style = TextStyle(
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.SansSerif,
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(24.dp)) {
-                SwipeActionButton(text = "↩Zurück") {
-                    lastRemoved?.let { f ->
-                        foodList = listOf(f) + foodList
-                        likedFoods = likedFoods - f
-                        dislikedFoods = dislikedFoods - f
-                        lastRemoved = null
-                        lastAction = null
-                    }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Karte
+        if (currentIndex < foods.size) {
+            SwipeableFoodCard(
+                food = foods[currentIndex],
+                isTop = true,
+                onSwiped = { liked ->
+                    if (liked) likedCount++ else dislikedCount++
+                    currentIndex++
                 }
-
-                SwipeActionButton(text = "Nein") {
-                    val current = foodList.firstOrNull() ?: return@SwipeActionButton
-                    lastRemoved = current
-                    lastAction = "Dislike"
-                    dislikedFoods = dislikedFoods + current
-                    foodList = foodList.filterNot { it.slug == current.slug }
-                }
-
-                SwipeActionButton(text = "✅ Ja") {
-                    val current = foodList.firstOrNull() ?: return@SwipeActionButton
-                    lastRemoved = current
-                    lastAction = "Like"
-                    likedFoods = likedFoods + current
-                    foodList = foodList.filterNot { it.slug == current.slug }
+            )
+        } else {
+            // Fertig-Bildschirm
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                BasicText(
+                    text = "Fertig!",
+                    style = TextStyle(
+                        fontSize = 28.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        color = Color(0xFF6200EE),
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                BasicText(
+                    text = "Likes: $likedCount",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        color = Color.Black
+                    )
+                )
+                BasicText(
+                    text = "Dislikes: $dislikedCount",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily.SansSerif,
+                        color = Color.Black
+                    )
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                ActionButton("Neu starten") {
+                    currentIndex = 0
+                    likedCount = 0
+                    dislikedCount = 0
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Buttons: Like – Zurück – Dislike
+        if (currentIndex < foods.size) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ActionButton("Like") {
+                    likedCount++
+                    currentIndex++
+                }
+                ActionButton("Zurück") {
+                    if (currentIndex > 0) currentIndex--
+                }
+                ActionButton("Dislike") {
+                    dislikedCount++
+                    currentIndex++
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ActionButton(text: String, onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .background(Color(0xFF03DAC5), RoundedCornerShape(12.dp))
+            .clickable { onClick() }
+            .padding(horizontal = 18.dp, vertical = 12.dp)
+    ) {
+        BasicText(
+            text = text,
+            style = TextStyle(
+                fontSize = 18.sp,
+                fontFamily = FontFamily.SansSerif,
+                color = Color.Black
+            )
+        )
     }
 }
