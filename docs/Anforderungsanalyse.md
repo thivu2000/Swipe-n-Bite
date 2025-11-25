@@ -1,45 +1,39 @@
-# Anforderungsanalyse – Snack ´N´ Bite
+# Anforderungsanalyse: Snack 'N' Bite
 
-## 1. Nutzerverwaltung
-- Login via Firebase Auth (E-Mail, Google, anonym)
-- Profildaten in Firestore (Name, Bild, Nutzer-ID)
-- Passwort zurücksetzen über Firebase
+## 1. Ziel
+Die App soll die gemeinsame Essensentscheidung vereinfachen, Gruppenfavoriten ermitteln und Restaurantempfehlungen bereitstellen.
 
-## 2. Gruppenfunktionen
-- Firestore Collections für Gruppen (ID, Name, Mitglieder)
-- Gruppenbeitritt über Einladungscode oder Link
-- Admin kann Mitglieder verwalten und Gruppe löschen
-- Optional: Gruppenchat via Realtime Database
+---
 
-## 3. Swiping-Funktion
-- Karten mit Bild & Text
-- Wischbewegung links/rechts
-- Likes/Dislikes speichern
-- Matching-Logik für gemeinsame Favoriten
+## 2. Analyse der Anforderungen
 
-## 4. Standort & Restaurants
-- Standort via Google Location Services
-- Restaurantdaten via Google Places API & Yelp
-- Filter: Entfernung, Preis, Bewertung
-- Darstellung: Bilder, Bewertungen, Öffnungszeiten, Links
+### Funktionale Anforderungen
+- Nutzer-Login & Profilverwaltung
+- Gruppen erstellen & verwalten
+- Swipen von Gerichten mit Like/Dislike
+- Speicherung der Bewertungen in der Datenbank
+- Gemeinsame Favoriten anzeigen
+- Standortbasierte Restaurantvorschläge (API: Google Places / Yelp)
+- Social-Discovery Funktion (optional)
 
-## 5. Rabatte & Angebote
-- API-Integration für Deals
-- Eigene Rabatt-DB in Firestore
+### Nicht-funktionale Anforderungen
+- Intuitive Bedienung
+- Schnelle Ladezeiten (< 2 Sek.)
+- Skalierbarkeit (Gruppen bis 15 Personen)
+- Plattformen: Android & iOS
+- Datenschutzkonformität (DSGVO)
 
-## 6. Social-Discovery
-- Status speichern
-- Nearby-Users-Query (Radius & Standortfreigabe)
-- Darstellung in extra Screen
+### Risiken & Herausforderungen
+- Ungenaue Standortdaten
+- Matching-Logik bei großen Gruppen
+- Lückenhafte Restaurantdaten
 
-## 7. Nicht-funktionale Anforderungen
-- Ladezeiten <2 Sekunden beim Swipen
-- Verschlüsselung (TLS + Firestore Security Rules)
-- UI/UX soll intuitiv sein
+---
 
-## 8. MVP
-- Flutter-App mit Firebase Auth & Firestore
-- Swipen von Dummy-Gerichten
-- Likes/Dislikes speichern
-- Gruppenergebnisse anzeigen
-- Standortabfrage + erste Restaurants
+## 3. MVP
+**Fokus auf Kernfunktionen:**
+1. Nutzerregistrierung & Login
+2. Gruppen erstellen & beitreten
+3. Swipen von Gerichten mit Speicherung der Likes/Dislikes
+4. Anzeige von gemeinsamen Favoriten innerhalb der Gruppe
+5. Restaurant-Suche via API

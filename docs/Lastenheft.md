@@ -1,46 +1,52 @@
-# Lastenheft – Snack ´N´ Bite
+# Lastenheft: Snack 'N' Bite
 
 ## 1. Einleitung
-Wir wollen eine App bauen, die es Gruppen einfacher macht, gemeinsam zu entscheiden, was es zu essen gibt. Nutzer*innen können Gerichte wischen (rechts = Like, links = Dislike), die Favoriten der Gruppe werden angezeigt, und passende Restaurants in der Nähe vorgeschlagen. Optional kann man andere Leute in der Umgebung finden (Social-Discovery).
+Dieses Dokument beschreibt die Anforderungen aus Sicht des Auftraggebers für die App **Snack 'N' Bite**.
 
-## 2. Zielgruppe
-- Freundesgruppen, Paare, WG-Mitglieder
+**Ziel:**  
+Die App soll die gemeinsame Essensentscheidung in Gruppen vereinfachen und einen spielerischen Mehrwert bieten.
+
+**Zielgruppe:**
+- Freundesgruppen
+- Paare
 - Kolleg*innen
-- Eventplaner
-- Einzelpersonen, die andere Essenspartner finden wollen
+- Einzelpersonen (Social-Discovery)
 
-## 3. Ziele der App
-- Schnelle gemeinsame Essensentscheidungen
-- Spaß durch Swipen
-- Automatische Restaurantempfehlungen
-- Rabatte und Angebote anzeigen
-- Neue Leute über Social-Discovery finden
+---
 
-## 4. Muss-Anforderungen
-- Registrierung & eigenes Profil
+## 2. Ziel der App
+- Gemeinsame Essensentscheidungen einfach und schnell treffen
+- Spaßfaktor durch Swiping-Mechanik erhöhen
+- Restaurantempfehlungen automatisiert anzeigen
+- Neue Kontakte über Social-Discovery ermöglichen
+
+---
+
+## 3. Anforderungen
+
+### Muss-Anforderungen
+- Registrierung & Profilverwaltung
 - Gruppen erstellen, beitreten, verwalten
-- Swipen von Gerichten
-- Gruppen-Favoriten anzeigen
-- Standort abfragen & Restaurants vorschlagen
-- DSGVO-konforme Daten
+- Swiping von Gerichten (Like/Dislike)
+- Gemeinsame Favoriten einer Gruppe anzeigen
+- Standortabfrage und Restaurantvorschläge
 
-## 5. Soll/Kann-Anforderungen
+### Soll-/Kann-Anforderungen
 - Gruppenchat (optional)
 - Social-Discovery (andere Nutzer*innen finden)
-- Rabatte & Deals anzeigen
 - Restaurantbuchungen oder Lieferdienste einbinden
 
-## 6. Nicht-funktionale Anforderungen
-- Bedienung einfach & intuitiv (<3 Klicks bis zum Swipen)
-- Kurze Ladezeiten
-- Skalierbar (Gruppen bis 15 Personen)
-- Android & iOS
-- Offline-Funktion für Swipes
-- Datenschutz (DSGVO, optionale Anonymität)
+---
 
-## 7. Risiken
+## 4. Nicht-funktionale Anforderungen
+- Intuitive Bedienung
+- Performance: kurze Ladezeiten
+- Skalierbarkeit: Gruppen bis 15 Personen
+- Plattformen: Android & iOS
+
+---
+
+## 5. Risiken
 - Ungenaue Standortdaten
-- API-Kosten (Google Places, Yelp)
-- Matching bei großen Gruppen
-- Lückenhafte Restaurantdaten
-- Datenschutzbedenken
+- Matching-Logik bei großen Gruppen
+- Lücken in Restaurantdaten
